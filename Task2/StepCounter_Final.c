@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include "FitnessDataStruct.h"
+#include <limits.h>
 
 // Struct moved to header file
 
@@ -77,7 +77,7 @@ int C(){
     FITNESS_DATA records[500];
     int buffer_size = 100;
     char line[buffer_size];
-    int i, counter=0;
+    int counter=0, min= INT_MAX , minIndex= -1;
 
     FILE *input =fopen(filename , "r");
 
@@ -94,8 +94,46 @@ int C(){
         strcpy(records[counter].time, time);
         records[counter].steps= atoi(steps);
         
+        if (records[counter].steps < min){
+            min = records[counter].steps;
+            minIndex = counter;
+        }
         counter++;
 }
+        
+    
+    printf("Fewest Steps: %s %s\n\n", records[minIndex].date, records[minIndex].time);
+}
+int D(){
+FITNESS_DATA records[500];
+    int buffer_size = 100;
+    char line[buffer_size];
+    int counter=0, max= INT_MIN , maxIndex= 0;
+
+    FILE *input =fopen(filename , "r");
+
+    char date[15];
+    char time[10];
+    char steps[10];
+
+   
+    
+    while (fgets(line, buffer_size, input)){
+        tokeniseRecord(line,",",date,time,steps);
+
+        strcpy(records[counter].date, date);
+        strcpy(records[counter].time, time);
+        records[counter].steps= atoi(steps);
+        
+        if (records[counter].steps > max){
+            max = records[counter].steps;
+            maxIndex = counter;
+        }
+        counter++;
+}
+        
+    
+    printf("Largest Steps: %s %s\n\n", records[maxIndex].date, records[maxIndex].time);
 }
 int E(){
     FITNESS_DATA records[500];
@@ -127,13 +165,63 @@ int E(){
     
     mean = total/counter;
     printf("Mean step count: %d\n\n", mean);
-    
-
 }
+
+int F(){
+    FITNESS_DATA records[500];
+    int buffer_size = 100;
+    char line[buffer_size];
+    int counter=0, Current= 0, Longest=0, startIndex= -1, endIndex= -1;
+
+    FILE *input =fopen(filename , "r");
+
+    char date[15];
+    char time[10];
+    char steps[10];
+
+    while (fgets(line, buffer_size, input)){
+        tokeniseRecord(line,",",date,time,steps);
+
+        strcpy(records[counter].date, date);
+        strcpy(records[counter].time, time);
+        records[counter].steps= atoi(steps);
+        
+        if (records[counter].steps > 500){
+            if (startIndex == -1){
+                startIndex = counter;
+            }
+            Current++;
+        }
+            else{
+                if (Current > Longest){
+                    Longest = Current;
+                    endIndex = counter -1;
+                }
+            Current = 0;
+            startIndex = -1;
+            }
+        
+        counter++;
+    }
+    startIndex = endIndex - Longest+1;
+    printf("Longest period start: %s %s\n", records[startIndex].date, records[startIndex].time);
+    printf("Longest period end: %s %s\n\n", records[endIndex].date, records[endIndex].time);
+}
+
+
 int main() {
 
     while(choice != "q"| choice != "Q"){
-    printf("A: Specify the filename to be imported\nB: Display the total number of records in the file\nC: Find the date and time of the timeslot with the fewest steps\nD: Find the date and time of the timeslot with the largest number of steps\nE: Find the mean step count of all the records in the file\nF: Find the longest continuous period where the step count is above 500 steps\nQ: Quit\nEnter Choice: ");
+    printf("Menu Options:\n");
+    printf("A: Specify the filename to be imported\n");
+    printf("B: Display the total number of records in the file\n");
+    printf("C: Find the date and time of the timeslot with the fewest steps\n");
+    printf("D: Find the date and time of the timeslot with the largest number of steps\n");
+    printf("E: Find the mean step count of all the records in the file\n");
+    printf("F: Find the longest continuous period where the step count is above 500 steps\n");
+    printf("Q: Quit\n");
+    printf("Enter Choice: ");
+
     scanf("%s", choice);
 
     
@@ -149,6 +237,7 @@ int main() {
                     printf("Could not find or open the file.\n\n");
                     
                 } 
+                
                 else{
                     printf("File successfully loaded\n\n");
                 
@@ -162,12 +251,13 @@ int main() {
 
             case 'C':
             case 'c':
-               
+                C();
                 break;
 
 
             case 'D':
             case 'd':
+                D();
                 break;
             case 'E':
             case 'e':
@@ -176,6 +266,7 @@ int main() {
 
             case 'F':
             case 'f':
+                F();
                 break;
             case 'Q':
             case 'q':
