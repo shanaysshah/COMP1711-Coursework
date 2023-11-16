@@ -50,48 +50,179 @@ void tokeniseRecord(const char *input, const char *delimiter,
 
 
 // Complete the main function
+int B(){
+    FITNESS_DATA records[500];
+    int buffer_size = 100;
+    char line[buffer_size];
+    int counter=0;
+
+    FILE *input =fopen(filename , "r");
+
+    char date[15];
+    char time[10];
+    char steps[10];
+
+    while (fgets(line, buffer_size, input)){
+        tokeniseRecord(line,",",date,time,steps);
+
+        strcpy(records[counter].date, date);
+        strcpy(records[counter].time, time);
+        records[counter].steps= atoi(steps);
+        counter++;
+    }
+    printf("Total records: %d\n\n", counter);
+}
+
+int C(){
+    FITNESS_DATA records[500];
+    int buffer_size = 100;
+    char line[buffer_size];
+    int i, counter=0;
+
+    FILE *input =fopen(filename , "r");
+
+    char date[15];
+    char time[10];
+    char steps[10];
+
+   
+    
+    while (fgets(line, buffer_size, input)){
+        tokeniseRecord(line,",",date,time,steps);
+
+        strcpy(records[counter].date, date);
+        strcpy(records[counter].time, time);
+        records[counter].steps= atoi(steps);
+        
+        counter++;
+}
+}
+int E(){
+    FITNESS_DATA records[500];
+    int buffer_size = 100;
+    char line[buffer_size];
+    int i, total, mean, counter=0;
+
+    FILE *input =fopen(filename , "r");
+
+    char date[15];
+    char time[10];
+    char steps[10];
+
+   
+    
+    while (fgets(line, buffer_size, input)){
+        tokeniseRecord(line,",",date,time,steps);
+
+        strcpy(records[counter].date, date);
+        strcpy(records[counter].time, time);
+        records[counter].steps= atoi(steps);
+        total = total + records[counter].steps;
+        counter++;
+    
+    
+        
+    }  
+    
+    
+    mean = total/counter;
+    printf("Mean step count: %d\n\n", mean);
+    
+
+}
 int main() {
 
+    while(choice != "q"| choice != "Q"){
     printf("A: Specify the filename to be imported\nB: Display the total number of records in the file\nC: Find the date and time of the timeslot with the fewest steps\nD: Find the date and time of the timeslot with the largest number of steps\nE: Find the mean step count of all the records in the file\nF: Find the longest continuous period where the step count is above 500 steps\nQ: Quit\nEnter Choice: ");
     scanf("%s", choice);
 
-    if (choice[0] == 'Q'){
-        return 0;
-    }
     
-    if (choice[0] == 'A'){
-        printf("Input Filename: ");
-        scanf("%s", filename);
-        if (access(filename, F_OK) !=0){
-            printf("Error: Could not find or open the file\n");
+        switch(choice[0]){
+            case 'A':
+            case 'a':
+                printf("Input Filename: ");
+                scanf("%s", filename);
+                
+                FILE *input = fopen(filename, "r");
+                if (!input){
+
+                    printf("Could not find or open the file.\n\n");
+                    
+                } 
+                else{
+                    printf("File successfully loaded\n\n");
+                
+                }
+                break;
+
+            case 'B':
+            case 'b':
+                B();
+                break;
+
+            case 'C':
+            case 'c':
+               
+                break;
+
+
+            case 'D':
+            case 'd':
+                break;
+            case 'E':
+            case 'e':
+                E();
+                break;
+
+            case 'F':
+            case 'f':
+                break;
+            case 'Q':
+            case 'q':
+                return 0;
+            
+            default: 
+                printf("Invalid choice. Try again\n\n");
         }
-        else{
-            printf("File successfully loaded\n");
-        }
-        printf("\n\n");
-        main();
     }
-    if (choice[0] == 'B'){
-        FITNESS_DATA records[500];
-        int buffer_size = 100;
-        char line[buffer_size];
-        int counter=0;
 
-        FILE *input =fopen(filename , "r");
+    // if (choice[0] == 'Q'){
+    //     return 0;
+    // }
+    
+    // if (choice[0] == 'A'){
+    //     printf("Input Filename: ");
+    //     scanf("%s", filename);
+    //     if (access(filename, F_OK) !=0){
+    //         printf("Error: Could not find or open the file\n");
+    //     }
+    //     else{
+    //         printf("File successfully loaded\n");
+    //     }
+    //     printf("\n\n");
+    //     main();
+    // }
+    // if (choice[0] == 'B'){
+    //     FITNESS_DATA records[500];
+    //     int buffer_size = 100;
+    //     char line[buffer_size];
+    //     int counter=0;
 
-        char date[15];
-        char time[10];
-        char steps[10];
+    //     FILE *input =fopen(filename , "r");
 
-        while (fgets(line, buffer_size, input)){
-            tokeniseRecord(line,",",date,time,steps);
-            strcpy(records[counter].date, date);
-            strcpy(records[counter].time, time);
-            records[counter].steps= atoi(steps);
-            counter++;
-    }
-        printf("Total records: %d\n\n\n", counter);
-        main();
+    //     char date[15];
+    //     char time[10];
+    //     char steps[10];
+
+    //     while (fgets(line, buffer_size, input)){
+    //         tokeniseRecord(line,",",date,time,steps);
+    //         strcpy(records[counter].date, date);
+    //         strcpy(records[counter].time, time);
+    //         records[counter].steps= atoi(steps);
+    //         counter++;
+    // }
+    //     printf("Total records: %d\n\n\n", counter);
+    //     main();
 
     
 
@@ -102,7 +233,7 @@ int main() {
     
 
 }
-}
+
 
 
 
